@@ -19,7 +19,6 @@ This repository contains practical, hands-on projects focused on defensive secur
 
 ## Projects
 
-Project
 ## 🚀 Portfolio Roadmap
 
 | Project                       | Technologies                                                                 |
