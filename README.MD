@@ -6,9 +6,11 @@
 
 ## 👋 About Me
 
-Hi, I'm **Franklin Rojas**.
+Hi, I'm **Franklin**, also known online as **Th3Bl4ckB34rd**.
 
-I'm an IT professional with a Bachelor's degree in Computer Engineering and a Master's degree in Cybersecurity. This repository documents my continuous learning journey through practical, real-world cybersecurity projects designed to strengthen my technical skills and prepare for professional cybersecurity roles.
+I'm an IT professional with a Bachelor's degree in Computer Engineering and a Master's degree in Cybersecurity. This repository showcases my hands-on cybersecurity projects, technical labs, and continuous learning journey as I develop practical skills in defensive security and security operations.
+
+My goal is to build real-world experience while contributing to the cybersecurity community through well-documented, practical projects.
 
 My primary interests include:
 
@@ -120,8 +122,8 @@ This repository serves as a living portfolio that documents my cybersecurity lea
 
 ## 📬 Connect with Me
 
-* 💼 LinkedIn: *(Add your LinkedIn URL)*
-* 💻 GitHub: *(Add your GitHub profile URL)*
+* 💼 LinkedIn: https://www.linkedin.com/in/franklin-rojas-picado/
+* 💻 GitHub: https://github.com/Th3Bl4ckB34rd/
 
 ---
 
