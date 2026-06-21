@@ -6,7 +6,7 @@
 
 ## 👋 About Me
 
-Hi, I'm **Franklin**, also known online as **Th3Bl4ckB34rd**.
+Hi, I'm **Franklin**, also known as **Th3Bl4ckB34rd**.
 
 I hold a B.S. in Computer Engineering and an M.S. in Cybersecurity. This portfolio documents my hands-on labs and projects as I build practical skills in defensive security and security operations.
 
