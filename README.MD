@@ -19,13 +19,21 @@ This repository contains practical, hands-on projects focused on defensive secur
 
 ## Projects
 
-| Project | Focus |
-| Active Directory Lab | Windows Server, GPOs, Kerberos, Hardening |
-| Home SOC | Wazuh, Sysmon, Elastic Stack |
-| Threat Hunting | IOC analysis and detection |
-| Detection Engineering | Sigma rules and custom detections |
-| Incident Response | End-to-end investigation |
-| Web Security | OWASP Top 10 |
-| Python Automation | Security tools and scripts |
+Project
+## 🚀 Portfolio Roadmap
+
+| Project                       | Technologies                                                                 |
+| ----------------------------- | ---------------------------------------------------------------------------- |
+| 🏢 Active Directory Lab       | Windows Server • Active Directory • DNS • DHCP • GPO • Kerberos • BloodHound |
+| 🛡️ Home SOC                  | Wazuh • Sysmon • Elastic Stack • Kibana                                      |
+| 🎯 Threat Hunting             | Sysmon • Windows Event Logs • MITRE ATT&CK                                   |
+| 🔍 Detection Engineering      | Sigma • YARA • Elastic • SIEM                                                |
+| 🚨 Incident Response          | DFIR • Timeline Analysis • IOC Investigation                                 |
+| 🌐 Web Application Security   | Burp Suite • OWASP Top 10 • SQLi • XSS                                       |
+| 🐍 Python Security Automation | Python • APIs • VirusTotal • Log Analysis                                    |
+| 🦠 Malware Analysis           | REMnux • PE Studio • Strings • Procmon                                       |
+| ☁️ Cloud Security             | Azure • Microsoft Defender • IAM                                             |
+| 🌐 Network Security           | Wireshark • Suricata • pfSense • TCP/IP                                      |
+
 
 -> This portfolio is continuously updated as I complete new projects and learn new technologies.
