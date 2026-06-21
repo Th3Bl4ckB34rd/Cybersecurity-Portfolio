@@ -19,16 +19,22 @@ The objective of this lab is to simulate a real enterprise Active Directory envi
 
 > 📌 Network diagram:
 
-                    🌐 Host-Only Network
-                      192.168.10.0/24
+```text
+                         🌐 Host-Only Network
+                           192.168.10.0/24
+                        Domain: corp.local
 
-        ┌────────────────┬────────────────┬────────────────┐
-        │                │                │                │
-   DC01 (AD DS + DNS)  WS01 (Client)   FS01 (File Server)  KALI (Attack)
-   192.168.10.10       192.168.10.20    192.168.10.15     192.168.10.30
-
-                    Domain: corp.local
-
+         ┌──────────────────┬─────────────────┬──────────────────┐
+         │                  │                 │                  │
+  ┌──────┴──────┐   ┌───────┴─────┐  ┌───────┴──────┐  ┌───────┴──────┐
+  │    DC01     │   │    WS01     │  │     FS01     │  │     KALI     │
+  │─────────────│   │─────────────│  │──────────────│  │──────────────│
+  │  AD DS      │   │  Windows 11 │  │ File Server  │  │  Kali Linux  │
+  │  DNS        │   │  Client     │  │  SMB Shares  │  │  (Attacker)  │
+  │─────────────│   │─────────────│  │──────────────│  │──────────────│
+  │.10.10       │   │  .10.20     │  │   .10.15     │  │   .10.30     │
+  └─────────────┘   └─────────────┘  └──────────────┘  └──────────────┘
+```
 ---
 
 ## Skills Demonstrated
