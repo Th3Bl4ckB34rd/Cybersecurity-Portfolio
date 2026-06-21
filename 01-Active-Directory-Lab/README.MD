@@ -9,17 +9,25 @@ and the defensive controls used to detect them.
 
 ---
 
+## 🎯 Objective
+
+The objective of this lab is to simulate a real enterprise Active Directory environment in order to understand how identity systems are attacked and how they can be secured, monitored, and hardened in practice.
+
+---
+
 ## Lab Architecture
 
-> 📌 Network diagram coming soon.
+> 📌 Network diagram:
 
-| Role | Hostname | OS | IP Address |
-|------|----------|----|------------|
-| Domain Controller | DC01 | Windows Server 2022 | 192.168.10.10 |
-| Windows Client | WS01 | Windows 11 | 192.168.10.20 |
-| Attack Machine | KALI | Kali Linux | 192.168.10.30 |
+                    🌐 Host-Only Network
+                      192.168.10.0/24
 
-**Hypervisor:** VMware Workstation 17 Pro — **Network:** NAT (192.168.10.0/24)
+        ┌────────────────┬────────────────┬────────────────┐
+        │                │                │                │
+   DC01 (AD DS + DNS)  WS01 (Client)   FS01 (File Server)  KALI (Attack)
+   192.168.10.10       192.168.10.20    192.168.10.15     192.168.10.30
+
+                    Domain: corp.local
 
 ---
 
@@ -63,39 +71,45 @@ and the defensive controls used to detect them.
 
 ---
 
-## Attack Coverage
+## ⚔️ Attack Coverage
 
 | Attack | Technique | MITRE ATT&CK |
 |--------|-----------|---------------|
 | BloodHound Enumeration | AD graph-based attack path discovery | T1069, T1087 |
-| Kerberoasting | Request TGS for SPNs, crack offline | T1558.003 |
+| Kerberoasting | Service ticket extraction & offline cracking | T1558.003 (Kerberos Service Ticket Request) |
 | AS-REP Roasting | Exploit accounts without pre-auth | T1558.004 |
 | Pass-the-Hash | Reuse NTLM hashes for lateral movement | T1550.002 |
 
 ---
 
-## Detection Reference
+## 🔎 Detection Reference
 
-| Event ID | Description | Relevance |
-|----------|-------------|-----------|
-| 4768 | Kerberos TGT request | Baseline / AS-REP Roasting |
-| 4769 | Kerberos TGS request | Kerberoasting detection |
-| 4771 | Kerberos pre-auth failed | Brute force / spray |
-| 4625 | Failed logon | Credential attacks |
-| 4672 | Special privileges assigned | Privilege escalation |
-| 4728 | Member added to security group | Persistence |
-
----
-
-## Screenshots
-
-> 📸 Screenshots will be added as each phase is completed.
+| Event ID | Description | Security Relevance | Data Source |
+|----------|-------------|-------------------|-------------|
+| 4768 | Kerberos Authentication (TGT Request) | Baseline authentication activity / potential AS-REP Roasting indicators | Security Logs |
+| 4769 | Kerberos Service Ticket (TGS Request) | Kerberoasting detection (service ticket requests for SPNs) | Security Logs |
+| 4771 | Kerberos Pre-Authentication Failure | Brute force attacks / password spraying attempts | Security Logs |
+| 4625 | Failed Logon Attempt | Credential attacks, brute force, and invalid authentication attempts | Security Logs |
+| 4672 | Special Privileges Assigned to New Logon | Privilege escalation / administrative logons | Security Logs |
+| 4728 | Member Added to Security-Enabled Global Group | Persistence / privilege escalation via group membership changes | Security Logs |
 
 ---
 
-## Lessons Learned
+## 📸 Evidence & Screenshots
 
-> 📝 To be documented during and after the project.
+Each phase includes evidence of configuration, attack execution, and detection results.
+
+---
+
+## 🧠 Lessons Learned
+
+This section will document:
+
+- Key misconfigurations discovered
+- Attack techniques understood
+- Detection gaps identified
+- Hardening improvements applied
+- Real-world enterprise implications
 
 ---
 
