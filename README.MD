@@ -1,38 +1,128 @@
-# Cybersecurity Portfolio
+# 🛡️ Cybersecurity Portfolio
 
-Welcome to my cybersecurity portfolio.
+> A collection of hands-on cybersecurity projects demonstrating practical skills in Blue Team operations, Security Operations Centers (SOC), Detection Engineering, Threat Hunting, Incident Response, Active Directory, Web Application Security, and Security Automation.
 
-This repository contains practical, hands-on projects focused on defensive security, security operations, and application security. Each project includes objectives, architecture, implementation steps, findings, and key lessons learned.
+---
 
-## Skills Demonstrated
+## 👋 About Me
 
-- Active Directory Security
-- Blue Team Operations
-- Security Monitoring (SIEM)
-- Threat Hunting
-- Detection Engineering
-- Incident Response
-- Network Security
-- Web Application Security
-- Python Security Automation
-- Malware Analysis
+Hi, I'm **Franklin Rojas**.
 
-## Projects
+I'm an IT professional with a Bachelor's degree in Computer Engineering and a Master's degree in Cybersecurity. This repository documents my continuous learning journey through practical, real-world cybersecurity projects designed to strengthen my technical skills and prepare for professional cybersecurity roles.
 
-## 🚀 Portfolio Roadmap
+My primary interests include:
 
-| Project                       | Technologies                                                                 |
-| ----------------------------- | ---------------------------------------------------------------------------- |
-| 🏢 Active Directory Lab       | Windows Server • Active Directory • DNS • DHCP • GPO • Kerberos • BloodHound |
-| 🛡️ Home SOC                  | Wazuh • Sysmon • Elastic Stack • Kibana                                      |
-| 🎯 Threat Hunting             | Sysmon • Windows Event Logs • MITRE ATT&CK                                   |
-| 🔍 Detection Engineering      | Sigma • YARA • Elastic • SIEM                                                |
-| 🚨 Incident Response          | DFIR • Timeline Analysis • IOC Investigation                                 |
-| 🌐 Web Application Security   | Burp Suite • OWASP Top 10 • SQLi • XSS                                       |
-| 🐍 Python Security Automation | Python • APIs • VirusTotal • Log Analysis                                    |
-| 🦠 Malware Analysis           | REMnux • PE Studio • Strings • Procmon                                       |
-| ☁️ Cloud Security             | Azure • Microsoft Defender • IAM                                             |
-| 🌐 Network Security           | Wireshark • Suricata • pfSense • TCP/IP                                      |
+* 🛡️ Blue Team Operations
+* 🔍 Threat Hunting
+* 🚨 Incident Response
+* 🏢 Active Directory Security
+* 📊 Security Monitoring & SIEM
+* 🌐 Web Application Security
+* 🐍 Security Automation
+* ☁️ Cloud Security
 
+---
 
--> This portfolio is continuously updated as I complete new projects and learn new technologies.
+# 🚀 Skills Demonstrated
+
+| Domain                | Technologies                                       |
+| --------------------- | -------------------------------------------------- |
+| Identity Security     | Active Directory, GPO, Kerberos, LDAP, DNS         |
+| Security Monitoring   | Wazuh, Sysmon, Elastic Stack, Windows Event Logs   |
+| Detection Engineering | Sigma Rules, MITRE ATT&CK, IOC Detection           |
+| Threat Hunting        | Log Analysis, IOC Investigation, Event Correlation |
+| Incident Response     | Investigation, Containment, Recovery               |
+| Web Security          | OWASP Top 10, Burp Suite                           |
+| Networking            | TCP/IP, Wireshark, Firewalls                       |
+| Programming           | Python, PowerShell                                 |
+| Operating Systems     | Windows Server, Windows 11, Linux                  |
+
+---
+
+# 📂 Projects
+
+| Project                           | Description                                                                                                                          | Technologies                                 |     Status     |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- | :------------: |
+| 🏢 **Active Directory Lab**       | Enterprise Windows domain environment with security hardening, GPO management, Kerberos attacks, and privilege escalation scenarios. | Windows Server, AD DS, DNS, DHCP, BloodHound | 🚧 In Progress |
+| 🛡️ **Home SOC**                  | Build a home Security Operations Center capable of collecting, monitoring, and analyzing security events.                            | Wazuh, Sysmon, Elastic Stack                 |    ⏳ Planned   |
+| 🎯 **Threat Hunting**             | Hunt adversary behaviors using Windows logs, Sysmon telemetry, and MITRE ATT&CK techniques.                                          | Sysmon, Event Viewer, MITRE ATT&CK           |    ⏳ Planned   |
+| 🔍 **Detection Engineering**      | Develop custom detection rules and SIEM analytics using Sigma and behavioral indicators.                                             | Sigma, Elastic, SIEM                         |    ⏳ Planned   |
+| 🚨 **Incident Response**          | Simulate security incidents and perform end-to-end investigations from detection to recovery.                                        | DFIR, Windows Logs, IOC Analysis             |    ⏳ Planned   |
+| 🌐 **Web Application Security**   | Assess vulnerable web applications by exploiting and mitigating OWASP Top 10 vulnerabilities.                                        | Burp Suite, OWASP Juice Shop                 |    ⏳ Planned   |
+| 🐍 **Python Security Automation** | Build Python scripts for IOC validation, log parsing, threat intelligence, and automation tasks.                                     | Python, APIs                                 |    ⏳ Planned   |
+| 🦠 **Malware Analysis**           | Analyze malware samples using static and behavioral techniques in isolated environments.                                             | Procmon, PEStudio, REMnux                    |    ⏳ Planned   |
+| ☁️ **Cloud Security**             | Explore identity management, monitoring, and security best practices in cloud environments.                                          | Azure, Microsoft Defender                    |    ⏳ Planned   |
+| 🌐 **Network Security**           | Capture, inspect, and analyze network traffic while implementing defensive controls.                                                 | Wireshark, pfSense, Suricata                 |    ⏳ Planned   |
+
+---
+
+# 🎯 Learning Goals
+
+This portfolio focuses on developing practical experience in:
+
+* Active Directory Administration & Security
+* Security Monitoring (SOC)
+* Detection Engineering
+* Threat Hunting
+* Digital Forensics & Incident Response (DFIR)
+* Web Application Security
+* Malware Analysis
+* Network Security
+* Cloud Security
+* Security Automation with Python
+
+---
+
+# 📚 Project Structure
+
+```text
+Cybersecurity-Portfolio/
+
+├── 01-Active-Directory-Lab/
+├── 02-Home-SOC-Wazuh/
+├── 03-Threat-Hunting/
+├── 04-Detection-Engineering/
+├── 05-Incident-Response/
+├── 06-Web-Application-Security/
+├── 07-Python-Security-Automation/
+├── 08-Malware-Analysis/
+├── 09-Network-Security/
+├── 10-Cloud-Security/
+│
+├── images/
+└── README.md
+```
+
+---
+
+# 📈 Current Progress
+
+| Category              | Progress |
+| --------------------- | :------: |
+| Active Directory      |    🚧    |
+| Home SOC              |     ⏳    |
+| Threat Hunting        |     ⏳    |
+| Detection Engineering |     ⏳    |
+| Incident Response     |     ⏳    |
+| Web Security          |     ⏳    |
+| Python Automation     |     ⏳    |
+| Malware Analysis      |     ⏳    |
+| Network Security      |     ⏳    |
+| Cloud Security        |     ⏳    |
+
+---
+
+# 📖 Repository Purpose
+
+This repository serves as a living portfolio that documents my cybersecurity learning journey through practical labs, technical documentation, and hands-on projects. Each project includes setup instructions, objectives, implementation details, findings, and key lessons learned.
+
+---
+
+## 📬 Connect with Me
+
+* 💼 LinkedIn: *(Add your LinkedIn URL)*
+* 💻 GitHub: *(Add your GitHub profile URL)*
+
+---
+
+⭐ **This repository is continuously updated as I complete new cybersecurity projects and expand my technical expertise.**
