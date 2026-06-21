@@ -47,8 +47,8 @@ real-world SOC and Blue Team workflows.
 
 ### 🔧 Phase 1 — Infrastructure Setup
 - [x] Install Windows Server 2022
-- [ ] Promote to Domain Controller (AD DS)
-- [ ] Configure DNS and DHCP
+- [x] Promote to Domain Controller (AD DS)
+- [x] Configure DNS and DHCP
 - [ ] Join Windows 11 client to domain
 
 ### 🏗️ Phase 2 — Active Directory Configuration
@@ -70,6 +70,22 @@ real-world SOC and Blue Team workflows.
 - [ ] Apply security hardening (SMB signing, LDAP signing, tiering model)
 - [ ] Document findings and recommendations
 
+---
+## Project Structure
+
+01-Install-Windows-Server/
+02-Install-Active-Directory/
+03-DNS-Configuration/
+04-Organizational-Units/
+05-Users-and-Groups/
+06-Group-Policy/
+07-Join-Client/
+08-Security-Hardening/
+09-Kerberoasting/
+10-AS-REP-Roasting/
+11-BloodHound/
+12-Detection/
+13-Lessons-Learned/
 ---
 
 ## ⚔️ Attack Coverage
