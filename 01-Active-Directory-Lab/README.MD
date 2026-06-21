@@ -1,17 +1,12 @@
 # 🏢 Active Directory Security Lab
 
-## Overview
-
-This lab simulates a small enterprise Windows environment to practice identity management,
-Windows administration, attack simulation, detection engineering, and defensive hardening.
-The environment is built from scratch using VMware and documents both offensive techniques
-and the defensive controls used to detect them.
-
----
-
 ## 🎯 Objective
 
-The objective of this lab is to simulate a real enterprise Active Directory environment in order to understand how identity systems are attacked and how they can be secured, monitored, and hardened in practice.
+This lab simulates a real enterprise Active Directory environment built from scratch
+using VMware to understand how identity systems work, how they are attacked, and how
+they can be secured, monitored, and hardened in practice. Each phase progresses from
+infrastructure deployment to attack simulation and detection engineering, mirroring
+real-world SOC and Blue Team workflows.
 
 ---
 
