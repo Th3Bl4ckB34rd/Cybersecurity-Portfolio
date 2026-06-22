@@ -2,7 +2,7 @@
 
 ## 🎯 Objective
 
-Prepare the base infrastructure for the Active Directory lab by deploying a Windows Server 2022 virtual machine, configuring its network settings, and validating connectivity before installing Active Directory Domain Services (AD DS).
+This phase documents the preparation of the base infrastructure for an Active Directory lab. A Windows Server 2022 virtual machine is deployed, network settings are configured, and connectivity is validated as a prerequisite for installing Active Directory Domain Services (AD DS).
 
 ---
 
