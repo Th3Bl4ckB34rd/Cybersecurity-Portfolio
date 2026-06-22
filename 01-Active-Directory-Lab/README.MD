@@ -49,7 +49,7 @@ real-world SOC and Blue Team workflows.
 - [x] Install Windows Server 2022
 - [x] Promote to Domain Controller (AD DS)
 - [x] Configure DNS and DHCP
-- [ ] Join Windows 11 client to domain
+- [x] Join Windows 11 client to domain
 
 ### 🏗️ Phase 2 — Active Directory Configuration
 - [ ] Design and create Organizational Units (OUs)
