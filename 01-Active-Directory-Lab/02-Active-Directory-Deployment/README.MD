@@ -53,7 +53,7 @@ The deployment was validated by confirming:
 
 Verification using **System Information** confirms that the server belongs to the `corp.local` domain.
 
-![Domain Validation](./Screenshots/02-Domain-Validation-SystemInfo.png)
+![Domain Validation](./Screenshots/02-Domain-Validation-SystemInfo-U.png)
 
 ---
 
