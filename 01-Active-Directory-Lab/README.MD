@@ -45,26 +45,26 @@ real-world SOC and Blue Team workflows.
 
 ## Project Roadmap
 
-### 🔧 Phase 1 — Infrastructure Setup
+### 🔧 Phase 1 - Infrastructure Setup
 - [x] Install Windows Server 2022
 - [x] Promote to Domain Controller (AD DS)
 - [x] Configure DNS and DHCP
 - [x] Join Windows 11 client to domain
 
-### 🏗️ Phase 2 — Active Directory Configuration
+### 🏗️ Phase 2 - Active Directory Configuration
 - [ ] Design and create Organizational Units (OUs)
 - [ ] Create users and security groups
 - [ ] Configure Group Policy Objects (GPOs)
 - [ ] Configure shared resources and permissions
 - [ ] Delegate administrative privileges
 
-### ⚔️ Phase 3 — Attack Simulation
-- [ ] BloodHound — AD enumeration and attack path mapping
-- [ ] Kerberoasting — SPN-based service account attacks
-- [ ] AS-REP Roasting — targeting accounts without pre-authentication
+### ⚔️ Phase 3 - Attack Simulation
+- [ ] BloodHound - AD enumeration and attack path mapping
+- [ ] Kerberoasting - SPN-based service account attacks
+- [ ] AS-REP Roasting - targeting accounts without pre-authentication
 - [ ] Pass-the-Hash / Pass-the-Ticket
 
-### 🛡️ Phase 4 — Detection & Hardening
+### 🛡️ Phase 4 - Detection & Hardening
 - [ ] Enable and configure Windows Event Logging
 - [ ] Detect attacks via Event IDs (4768, 4769, 4771, 4625, etc.)
 - [ ] Apply security hardening (SMB signing, LDAP signing, tiering model)
@@ -133,6 +133,6 @@ This section will document:
 ## References
 
 - [Microsoft AD DS Documentation](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview)
-- [MITRE ATT&CK — Enterprise](https://attack.mitre.org/matrices/enterprise/)
+- [MITRE ATT&CK - Enterprise](https://attack.mitre.org/matrices/enterprise/)
 - [BloodHound Documentation](https://bloodhound.specterops.io/get-started/introduction)
-- [SpecterOps — Kerberoasting](https://specterops.io/blog/2019/02/20/kerberoasting-revisited/)
+- [SpecterOps - Kerberoasting](https://specterops.io/blog/2019/02/20/kerberoasting-revisited/)

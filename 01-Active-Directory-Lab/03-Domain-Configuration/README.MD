@@ -1,9 +1,9 @@
-# 🌐 Phase 3 — DNS Configuration & Domain Validation
+# 🌐 Phase 3 - DNS Configuration & Domain Validation
 
 ## 🎯 Objective
 
 Validate that DNS and Active Directory Domain Services (AD DS) are correctly configured
-and fully operational in the `corp.local` domain — covering name resolution, domain
+and fully operational in the `corp.local` domain - covering name resolution, domain
 health, and client connectivity.
 
 ---
@@ -12,8 +12,8 @@ health, and client connectivity.
 
 | Component | Details |
 |-----------|---------|
-| Domain Controller | DC01 — 192.168.10.10 |
-| Client Machine | WS01 — 192.168.10.20 |
+| Domain Controller | DC01 - 192.168.10.10 |
+| Client Machine | WS01 - 192.168.10.20 |
 | Domain | corp.local |
 | Network | VMware Host-Only (192.168.10.0/24) |
 
@@ -38,7 +38,7 @@ DC01 acts as the primary DNS server for the domain with AD-integrated DNS enable
 
 ## 🔍 Validation Tests
 
-### 1. DNS Resolution — DC01
+### 1. DNS Resolution - DC01
 
 Verified that `corp.local` resolves correctly from the domain controller itself.
 
@@ -60,7 +60,7 @@ Verified that `corp.local` resolves correctly from the domain controller itself.
 
 ---
 
-### 3. DNS Resolution — WS01
+### 3. DNS Resolution - WS01
 
 Verified that the client resolves `corp.local` using DC01 as its DNS server.
 
@@ -71,7 +71,7 @@ Verified that the client resolves `corp.local` using DC01 as its DNS server.
 
 ---
 
-### 4. Network Connectivity — WS01 → DC01
+### 4. Network Connectivity - WS01 → DC01
 
 Confirmed layer 3 connectivity between client and domain controller.
 
@@ -95,10 +95,10 @@ Confirmed layer 3 connectivity between client and domain controller.
 
 ## 🧠 Key Learnings
 
-- AD DS is entirely dependent on DNS — misconfigured DNS breaks domain functionality
+- AD DS is entirely dependent on DNS - misconfigured DNS breaks domain functionality
 - SRV records registered automatically by Netlogon enable domain service discovery
 - `dcdiag` is the primary tool for validating domain controller health
-- Not all `dcdiag` warnings indicate failures — context matters in lab vs. production
+- Not all `dcdiag` warnings indicate failures - context matters in lab vs. production
 - Virtual network adapters can introduce brief latency on first DNS queries
 
 ---
@@ -108,4 +108,4 @@ Confirmed layer 3 connectivity between client and domain controller.
 The `corp.local` domain is fully operational. DNS resolves correctly from both DC01
 and WS01, `dcdiag` reports no critical failures, and client-to-DC connectivity is stable.
 
-👉 **Next:** [Phase 4 — Identity Management](../04-Identity-Management/)
+👉 **Next:** [Phase 4 - Identity Management](../04-Identity-Management/)

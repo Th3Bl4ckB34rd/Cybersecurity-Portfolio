@@ -1,4 +1,4 @@
-# 👥 Phase 4 — Identity Management
+# 👥 Phase 4 - Identity Management
 
 ## 🎯 Objective
 
@@ -39,10 +39,10 @@ Global Security Groups were created per department to enforce role-based access 
 
 | Group | Scope | Type | Purpose |
 |-------|-------|------|---------|
-| IT_Admins | Global | Security | IT department — elevated permissions |
-| HR_Users | Global | Security | HR department — standard access |
-| Finance_Users | Global | Security | Finance department — standard access |
-| Sales_Users | Global | Security | Sales department — standard access |
+| IT_Admins | Global | Security | IT department - elevated permissions |
+| HR_Users | Global | Security | HR department - standard access |
+| Finance_Users | Global | Security | Finance department - standard access |
+| Sales_Users | Global | Security | Sales department - standard access |
 
 ![Security Groups](Screenshots/02-security-groups.png)
 
@@ -87,7 +87,7 @@ Each user was assigned to their departmental security group following least-priv
 
 ## 🧠 Key Learnings
 
-- A well-designed OU structure is foundational — it directly impacts GPO scope,
+- A well-designed OU structure is foundational - it directly impacts GPO scope,
   delegation boundaries, and administrative efficiency
 - Security Groups decouple identity from permissions, enabling scalable RBAC
 - Placing users in departmental OUs from the start simplifies future policy targeting
@@ -101,7 +101,7 @@ Each user was assigned to their departmental security group following least-priv
 ## ✅ Outcome
 
 The `corp.local` domain now has a structured identity model with departmental OUs,
-role-based security groups, and provisioned user accounts — ready to support GPO
+role-based security groups, and provisioned user accounts - ready to support GPO
 deployment, administrative delegation, and attack simulation.
 
-👉 **Next:** [Phase 5 — Client Integration](../05-Client-Integration/)
+👉 **Next:** [Phase 5 - Client Integration](../05-Client-Integration/)

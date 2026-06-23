@@ -1,9 +1,9 @@
-# 🏗️ Phase 2 — Active Directory Deployment
+# 🏗️ Phase 2 - Active Directory Deployment
 
 ## 🎯 Objective
 
 Deploy Active Directory Domain Services (AD DS) and promote DC01 to the first Domain
-Controller of the `corp.local` forest — establishing the identity infrastructure used
+Controller of the `corp.local` forest - establishing the identity infrastructure used
 throughout the remainder of the lab.
 
 ---
@@ -80,7 +80,7 @@ Confirms the forest root domain and trust structure.
 ## 🧠 Key Learnings
 
 - Promoting the first DC automatically creates the forest, domain, and initial
-  OU structure — no manual forest creation required
+  OU structure - no manual forest creation required
 - AD DS requires DNS to function; AD-integrated DNS is the recommended approach
   as it replicates zone data through AD itself
 - Forest and Domain Functional Levels determine which AD features are available —
@@ -101,4 +101,4 @@ DC01 is operational as the forest root Domain Controller for `corp.local`, provi
 | AD-Integrated DNS | ✅ Active |
 | Centralized Identity Management | ✅ Active |
 
-👉 **Next:** [Phase 3 — DNS Configuration & Domain Validation](../03-Domain-Configuration/)
+👉 **Next:** [Phase 3 - DNS Configuration & Domain Validation](../03-Domain-Configuration/)

@@ -1,10 +1,10 @@
-# 🔧 Phase 1 — Environment Setup
+# 🔧 Phase 1 - Environment Setup
 
 ## 🎯 Objective
 
 Prepare the base infrastructure for the Active Directory lab by deploying a
 Windows Server 2022 virtual machine, configuring static networking, and validating
-connectivity — prerequisites before installing AD DS.
+connectivity - prerequisites before installing AD DS.
 
 ---
 
@@ -37,7 +37,7 @@ connectivity — prerequisites before installing AD DS.
 
 **Why static IP?**
 Domain Controllers must have a fixed IP address. Clients and member servers use
-this address for DNS resolution and Kerberos authentication — a changing IP breaks
+this address for DNS resolution and Kerberos authentication - a changing IP breaks
 both.
 
 **Why self-referencing DNS?**
@@ -66,7 +66,7 @@ exposure while still allowing VM-to-VM communication.
 
 ## 🧠 Key Learnings
 
-- Static IPs on Domain Controllers are non-negotiable — DNS and Kerberos depend on
+- Static IPs on Domain Controllers are non-negotiable - DNS and Kerberos depend on
   address stability
 - Pointing DNS to itself before AD promotion avoids post-install DNS reconfiguration
 - Host-Only networking is the safest isolation mode for attack simulation labs —
@@ -79,6 +79,6 @@ exposure while still allowing VM-to-VM communication.
 ## ✅ Outcome
 
 DC01 is deployed with a stable static IP, correct DNS configuration, and validated
-network connectivity — ready for AD DS installation.
+network connectivity - ready for AD DS installation.
 
-👉 **Next:** [Phase 2 — Active Directory Deployment](../02-Active-Directory-Deployment/)
+👉 **Next:** [Phase 2 - Active Directory Deployment](../02-Active-Directory-Deployment/)
