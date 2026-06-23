@@ -104,7 +104,7 @@ Domain: corp.local
 WS01 appears in the **Computers** container in ADUC, confirming the computer
 object was automatically created upon domain join.
 
-![WS01 in AD Computers](Screenshots/05-ws01-ad-computers.png)
+![WS01 in AD Computers](Screenshots/05-ws01-domain-join-success.png)
 
 ---
 
