@@ -1,61 +1,84 @@
-# 🔧 Environment Setup
+# 🔧 Phase 1 — Environment Setup
 
 ## 🎯 Objective
 
-This phase documents the preparation of the base infrastructure for an Active Directory lab. A Windows Server 2022 virtual machine is deployed, network settings are configured, and connectivity is validated as a prerequisite for installing Active Directory Domain Services (AD DS).
+Prepare the base infrastructure for the Active Directory lab by deploying a
+Windows Server 2022 virtual machine, configuring static networking, and validating
+connectivity — prerequisites before installing AD DS.
 
 ---
 
-## Environment
+## 🧱 Environment
 
 | Component | Configuration |
-|----------|---------------|
+|-----------|---------------|
 | Hypervisor | VMware Workstation Pro 17 |
-| Operating System | Windows Server 2022 Desktop Experience |
+| OS | Windows Server 2022 (Desktop Experience) |
 | Hostname | DC01 |
-| Network | Host-Only |
-| IP Address | 192.168.10.10/24 |
-| DNS Server | 192.168.10.10 |
+| Network Adapter | VMware Host-Only |
+| IP Address | 192.168.10.10 / 24 |
+| Default Gateway | 192.168.10.1 |
+| DNS Server | 192.168.10.10 (self) |
 
 ---
 
-## Tasks Completed
+## ✅ Tasks Completed
 
-- [x] Create Windows Server 2022 virtual machine
-- [x] Configure VMware Host-Only network
-- [x] Rename server to **DC01**
-- [x] Configure a static IPv4 address
-- [x] Configure DNS to point to the future Domain Controller
+- [x] Create Windows Server 2022 VM in VMware
+- [x] Configure Host-Only network adapter
+- [x] Rename server to `DC01`
+- [x] Assign static IPv4 address (`192.168.10.10/24`)
+- [x] Set DNS to point to itself (`192.168.10.10`) in preparation for AD DS
 - [x] Validate network configuration
 
 ---
 
-## Validation
+## 🔧 Configuration Notes
 
-The server was successfully configured with a static IP address and validated for network connectivity. This provides a stable foundation for deploying Active Directory Domain Services in the next phase.
+**Why static IP?**
+Domain Controllers must have a fixed IP address. Clients and member servers use
+this address for DNS resolution and Kerberos authentication — a changing IP breaks
+both.
+
+**Why self-referencing DNS?**
+Setting DNS to `192.168.10.10` (itself) prepares the server for AD-integrated DNS.
+After AD DS promotion, DC01 will host the `corp.local` DNS zone and resolve all
+domain queries locally.
+
+**Why Host-Only networking?**
+Isolates the lab from the host's physical network, preventing unintended traffic
+exposure while still allowing VM-to-VM communication.
 
 ---
 
-## 📸 Screenshots
+## 📸 Evidence
 
-### 1. DC01 Base Setup
-
+### 1. VM Base Setup
 ![DC01 Base Setup](./Screenshots/01-DC01-Base-Setup.png)
 
----
-
-### 2. Network Configuration
-
+### 2. Static IP & DNS Configuration
 ![Network Configuration](./Screenshots/02-DC01-Network-Configuration.png)
 
----
-
 ### 3. Network Validation
-
 ![Network Validation](./Screenshots/03-DC01-Network-Validation.png)
 
 ---
 
-## Outcome
+## 🧠 Key Learnings
 
-The base infrastructure has been successfully deployed and configured. The server is ready for Active Directory Domain Services (AD DS) installation and promotion to a Domain Controller.
+- Static IPs on Domain Controllers are non-negotiable — DNS and Kerberos depend on
+  address stability
+- Pointing DNS to itself before AD promotion avoids post-install DNS reconfiguration
+- Host-Only networking is the safest isolation mode for attack simulation labs —
+  offensive tools stay contained
+- Renaming the server before domain promotion avoids having to rejoin the domain
+  after a rename
+
+---
+
+## ✅ Outcome
+
+DC01 is deployed with a stable static IP, correct DNS configuration, and validated
+network connectivity — ready for AD DS installation.
+
+👉 **Next:** [Phase 2 — Active Directory Deployment](../02-Active-Directory-Deployment/)

@@ -1,125 +1,111 @@
-# 🌐 Phase 3 — Domain Configuration (DNS & Validation)
+# 🌐 Phase 3 — DNS Configuration & Domain Validation
 
 ## 🎯 Objective
 
-This phase validates DNS and Active Directory Domain Services (AD DS) functionality in the `corp.local` domain. The goal is to ensure proper name resolution, domain health, and client connectivity.
+Validate that DNS and Active Directory Domain Services (AD DS) are correctly configured
+and fully operational in the `corp.local` domain — covering name resolution, domain
+health, and client connectivity.
 
 ---
 
-## 🧱 Environment Overview
+## 🧱 Environment
 
-- Domain Controller: DC01
-- Client Machine: WS01
-- Domain: corp.local
-- IP Range: 192.168.10.0/24
-- DC01 IP: 192.168.10.10
-- Network: VMware Host-Only
+| Component | Details |
+|-----------|---------|
+| Domain Controller | DC01 — 192.168.10.10 |
+| Client Machine | WS01 — 192.168.10.20 |
+| Domain | corp.local |
+| Network | VMware Host-Only (192.168.10.0/24) |
 
 ---
 
 ## 🔧 DNS Configuration
 
-DC01 is configured as the primary DNS server for the domain.
+DC01 acts as the primary DNS server for the domain with AD-integrated DNS enabled.
 
-Key points:
-- DNS role installed on DC01
-- Forward Lookup Zone: corp.local
-- DC01 uses itself as DNS (192.168.10.10)
-- Active Directory integrated DNS enabled
+| Setting | Value |
+|---------|-------|
+| DNS Role | Installed on DC01 |
+| Forward Lookup Zone | corp.local |
+| DC01 DNS (self) | 192.168.10.10 |
+| Zone Type | Active Directory Integrated |
 
-### 📸 Evidence
-
-![DNS Manager](Screenshots/01-DNS-Manager.png)
-
-![IP Configuration](Screenshots/02-IPConfig-All.png)
+| DNS Manager | IP Configuration |
+|-------------|-----------------|
+| ![DNS Manager](Screenshots/01-DNS-Manager.png) | ![IPConfig](Screenshots/02-IPConfig-All.png) |
 
 ---
 
 ## 🔍 Validation Tests
 
-### 1. DNS Resolution (DC01)
+### 1. DNS Resolution — DC01
 
-- Query: corp.local
-- Result: Resolved to 192.168.10.10
+Verified that `corp.local` resolves correctly from the domain controller itself.
 
-📸 Evidence:
+- **Command:** `nslookup corp.local`
+- **Result:** ✅ Resolved to `192.168.10.10`
 
-![nslookup success](Validation/03-01-nslookup-corp-local-success.png)
+![nslookup DC01](Validation/03-01-nslookup-corp-local-success.png)
 
 ---
 
 ### 2. Active Directory Health Check
 
-- Tool: dcdiag
-- Result: All tests passed successfully
+`dcdiag` confirms all core AD services are healthy and operational.
 
-📸 Evidence:
+- **Command:** `dcdiag /v`
+- **Result:** ✅ All tests passed
 
-![dcdiag success](Validation/03-02-dcdiag-success.png)
+![dcdiag](Validation/03-02-dcdiag-success.png)
 
 ---
 
-### 3. Client DNS Resolution (WS01)
+### 3. DNS Resolution — WS01
 
-- Query: corp.local via DC01 DNS
+Verified that the client resolves `corp.local` using DC01 as its DNS server.
 
-📸 Evidence:
+- **Command:** `nslookup corp.local` (from WS01)
+- **Result:** ✅ Resolved via 192.168.10.10
 
 ![WS01 nslookup](Validation/03-03-ws01-nslookup-corp-local.png)
 
 ---
 
-### 4. Network Connectivity Test (WS01 → DC01)
+### 4. Network Connectivity — WS01 → DC01
 
-- Ping to 192.168.10.10 successful
+Confirmed layer 3 connectivity between client and domain controller.
 
-📸 Evidence:
+- **Command:** `ping 192.168.10.10`
+- **Result:** ✅ Replies received, no packet loss
 
 ![WS01 ping DC01](Validation/03-04-ws01-ping-dc01.png)
 
 ---
 
-## ⚠️ Issues Encountered & Notes
+## ⚠️ Issues & Troubleshooting
 
-### DNS Initial Delay
-- nslookup showed brief timeout before resolving
-- Cause: VMware Host-Only network latency
+| Issue | Cause | Resolution |
+|-------|-------|------------|
+| nslookup initial timeout | VMware Host-Only network latency | Waited for network stabilization |
+| dcdiag DNS warnings (wpad, SPNs) | Expected in minimal lab environments | Confirmed non-critical, no action needed |
 
-### dcdiag Warnings
-- Some DNS-related warnings (wpad, SPNs)
-- Expected in lab environments
-
-### Troubleshooting Actions
-- DNS flush
-- Netlogon restart
-- Connectivity revalidation
+**Troubleshooting steps taken:** DNS cache flush → Netlogon service restart → Connectivity revalidation.
 
 ---
 
 ## 🧠 Key Learnings
 
-- DNS is critical for Active Directory functionality
-- SRV records enable automatic service discovery
-- dcdiag is essential for validating domain health
-- Virtual networks may introduce latency
-- Not all warnings indicate failures
+- AD DS is entirely dependent on DNS — misconfigured DNS breaks domain functionality
+- SRV records registered automatically by Netlogon enable domain service discovery
+- `dcdiag` is the primary tool for validating domain controller health
+- Not all `dcdiag` warnings indicate failures — context matters in lab vs. production
+- Virtual network adapters can introduce brief latency on first DNS queries
 
 ---
 
-## 📸 Evidence Summary
+## ✅ Outcome
 
-- DNS Manager configuration
-- IP configuration
-- DNS resolution tests
-- Domain health check (dcdiag)
-- Client connectivity validation
+The `corp.local` domain is fully operational. DNS resolves correctly from both DC01
+and WS01, `dcdiag` reports no critical failures, and client-to-DC connectivity is stable.
 
----
-
-## ✅ Conclusion
-
-The `corp.local` domain is fully functional and correctly integrated with DNS services.
-
-All validation tests confirm stable AD operation.
-
-👉 Ready for Phase 4 — Identity Management
+👉 **Next:** [Phase 4 — Identity Management](../04-Identity-Management/)
