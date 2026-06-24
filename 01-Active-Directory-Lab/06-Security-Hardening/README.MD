@@ -1,9 +1,9 @@
-# 🔐 Phase 6 — Security Hardening (GPO Baseline)
+# 🔐 Phase 6 - Security Hardening (GPO Baseline)
 
 ## 🎯 Objective
 
 Strengthen the `corp.local` environment by applying baseline security policies
-through Group Policy Objects (GPOs) — enforcing password complexity, account
+through Group Policy Objects (GPOs) - enforcing password complexity, account
 lockout controls, and validating policy propagation across domain-joined clients.
 
 ---
@@ -12,14 +12,14 @@ lockout controls, and validating policy propagation across domain-joined clients
 
 | Component | Details |
 |-----------|---------|
-| Domain Controller | DC01 — 192.168.10.10 |
-| Client Machine | WS01 — 192.168.10.20 |
+| Domain Controller | DC01 - 192.168.10.10 |
+| Client Machine | WS01 - 192.168.10.20 |
 | Domain | corp.local |
 | Policy Tool | Group Policy Management Console (GPMC) |
 
 ---
 
-## 🔒 Step 1 — Password Policy
+## 🔒 Step 1 - Password Policy
 
 The **Default Domain Policy** was edited to enforce enterprise-grade password requirements.
 
@@ -38,7 +38,7 @@ The **Default Domain Policy** was edited to enforce enterprise-grade password re
 
 ---
 
-## 🔐 Step 2 — Account Lockout Policy
+## 🔐 Step 2 - Account Lockout Policy
 
 Account lockout settings were configured to mitigate brute-force and
 password spraying attacks.
@@ -52,12 +52,12 @@ password spraying attacks.
 ![Account Lockout Policy](Screenshots/03-account-lockout-policy.png)
 
 > **Attack relevance:** These settings will directly affect attack behavior in
-> Phase 7 — password spraying must stay under the 5-attempt threshold to avoid
+> Phase 7 - password spraying must stay under the 5-attempt threshold to avoid
 > triggering lockouts and generating Event ID 4740.
 
 ---
 
-## 🔄 Step 3 — Policy Propagation
+## 🔄 Step 3 - Policy Propagation
 
 Policies were forced to propagate immediately on both DC01 and WS01.
 
@@ -75,7 +75,7 @@ gpupdate /force
 
 ---
 
-## ✅ Step 4 — Validation
+## ✅ Step 4 - Validation
 
 ### Resultant Set of Policy (RSoP)
 
@@ -116,7 +116,7 @@ in the User Settings section.
 (`WS01\frank`). User-scoped GPOs only apply to domain accounts (`CORP\jsmith`).
 
 **Resolution:** The **Computer Settings** section confirmed `Default Domain Policy`
-was applied correctly — this is sufficient to validate password and lockout
+was applied correctly - this is sufficient to validate password and lockout
 policy enforcement, which are computer-scoped settings.
 
 > **Lesson:** Always distinguish between computer-scoped and user-scoped GPOs
@@ -127,13 +127,13 @@ policy enforcement, which are computer-scoped settings.
 ## 🧠 Key Learnings
 
 - Password and lockout policies live in **Default Domain Policy** and apply
-  domain-wide — creating a separate GPO for these risks being overridden by
+  domain-wide - creating a separate GPO for these risks being overridden by
   precedence rules
-- `gpupdate /force` bypasses the default 90-minute refresh interval — essential
+- `gpupdate /force` bypasses the default 90-minute refresh interval - essential
   in lab environments where time matters
-- `gpresult /r` splits output into **Computer** and **User** scopes —
+- `gpresult /r` splits output into **Computer** and **User** scopes -
   understanding which scope applies to which setting is critical for accurate validation
-- Account lockout thresholds have a direct impact on attack strategy —
+- Account lockout thresholds have a direct impact on attack strategy -
   too low causes accidental lockouts; too high gives attackers too many attempts
 - `net accounts` is the fastest way to confirm password policy without
   opening GPMC
@@ -153,4 +153,4 @@ The `corp.local` domain now enforces a security baseline across all domain-joine
 | Domain-wide GPO propagation | ✅ Verified |
 | Client-side policy application | ✅ Validated |
 
-👉 **Next:** [Phase 7 — Attack Simulation](../07-Attack-Simulation/)
+👉 **Next:** [Phase 7 - Attack Simulation](../07-Attack-Simulation/)
