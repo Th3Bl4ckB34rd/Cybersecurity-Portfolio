@@ -3,16 +3,19 @@
 ## 🎯 Objective
 
 This lab simulates a real enterprise Active Directory environment built from scratch
-using VMware to understand how identity systems work, how they are attacked, and how
-they can be secured, monitored, and hardened in practice. Each phase progresses from
-infrastructure deployment to attack simulation and detection engineering, mirroring
-real-world SOC and Blue Team workflows.
+using VMware to understand how identity systems operate, how they are attacked, and
+how they can be detected, monitored, and hardened in practice.
+
+The project follows a full attack lifecycle:
+
+- Infrastructure deployment & AD configuration
+- Attack simulation (SMB, LDAP, RID brute force, credential access)
+- Attack path analysis (BloodHound CE)
+- Detection engineering (SOC modeling & MITRE ATT&CK mapping)
 
 ---
 
-## Lab Architecture
-
-> 📌 Network diagram:
+## 🧱 Lab Architecture
 
 ```text
                          🌐 Host-Only Network
@@ -27,112 +30,89 @@ real-world SOC and Blue Team workflows.
   │  AD DS      │   │  Windows 11 │  │ File Server  │  │  Kali Linux  │
   │  DNS        │   │  Client     │  │  SMB Shares  │  │  (Attacker)  │
   │─────────────│   │─────────────│  │──────────────│  │──────────────│
-  │.10.10       │   │  .10.20     │  │   .10.15     │  │   .10.30     │
+  │192.168.10.10│   │192.168.10.20│  │192.168.10.15 │  │192.168.10.30 │
   └─────────────┘   └─────────────┘  └──────────────┘  └──────────────┘
 ```
+
 ---
 
-## Skills Demonstrated
+## 🧠 Skills Demonstrated
 
 | Category | Skills |
 |----------|--------|
-| Administration | Active Directory, DNS, DHCP, Group Policy (GPO) |
-| Identity & Access | OU design, user/group management, privilege delegation |
-| Offensive | Kerberoasting, AS-REP Roasting, BloodHound enumeration |
-| Defensive | Security hardening, attack detection, event log analysis |
+| Infrastructure | VMware lab design, Windows Server 2022 setup |
+| Identity & Access | Active Directory, DNS, GPO, OU design, privilege delegation |
+| Offensive Security | SMB/LDAP enumeration, NetExec, BloodHound, credential access |
+| Attack Simulation | RID brute force, account enumeration, ACL abuse |
+| Blue Team / SOC | Detection engineering, MITRE ATT&CK mapping, event log analysis |
+| Threat Detection | Behavioral detection logic, SOC correlation modeling |
 
 ---
 
-## Project Roadmap
+## 📂 Project Phases
 
-### 🔧 Phase 1 - Infrastructure Setup
-- [x] Install Windows Server 2022
-- [x] Promote to Domain Controller (AD DS)
-- [x] Configure DNS and DHCP
-- [x] Join Windows 11 client to domain
+| # | Phase | Status |
+|---|-------|:------:|
+| 01 | [🔧 Environment Setup](./01-Environment-Setup/) | ✅ Complete |
+| 02 | [🏗️ Active Directory Deployment](./02-Active-Directory-Deployment/) | ✅ Complete |
+| 03 | [🌐 DNS Configuration & Validation](./03-Domain-Configuration/) | ✅ Complete |
+| 04 | [👥 Identity Management](./04-Identity-Management/) | ✅ Complete |
+| 05 | [💻 Client Integration](./05-Client-Integration/) | ✅ Complete |
+| 06 | [🔐 Security Hardening](./06-Security-Hardening/) | ✅ Complete |
+| 07 | [⚔️ Attack Simulation](./07-Attack-Simulation/) | ✅ Complete |
+| 08 | [🩸 BloodHound & Attack Path Analysis](./08-BloodHound-Analysis/) | ✅ Complete |
+| 09 | [🛡️ Detection Engineering](./09-Detection-Engineering/) | ✅ Complete |
+| 10 | [📖 Lessons Learned](./10-Lessons-Learned/) | ✅ Complete |
 
-### 🏗️ Phase 2 - Active Directory Configuration
-- [ ] Design and create Organizational Units (OUs)
-- [ ] Create users and security groups
-- [ ] Configure Group Policy Objects (GPOs)
-- [ ] Configure shared resources and permissions
-- [ ] Delegate administrative privileges
-
-### ⚔️ Phase 3 - Attack Simulation
-- [ ] BloodHound - AD enumeration and attack path mapping
-- [ ] Kerberoasting - SPN-based service account attacks
-- [ ] AS-REP Roasting - targeting accounts without pre-authentication
-- [ ] Pass-the-Hash / Pass-the-Ticket
-
-### 🛡️ Phase 4 - Detection & Hardening
-- [ ] Enable and configure Windows Event Logging
-- [ ] Detect attacks via Event IDs (4768, 4769, 4771, 4625, etc.)
-- [ ] Apply security hardening (SMB signing, LDAP signing, tiering model)
-- [ ] Document findings and recommendations
-
----
-## Project Structure
-
-01-Install-Windows-Server/
-02-Install-Active-Directory/
-03-DNS-Configuration/
-04-Organizational-Units/
-05-Users-and-Groups/
-06-Group-Policy/
-07-Join-Client/
-08-Security-Hardening/
-09-Kerberoasting/
-10-AS-REP-Roasting/
-11-BloodHound/
-12-Detection/
-13-Lessons-Learned/
 ---
 
 ## ⚔️ Attack Coverage
 
 | Attack | Technique | MITRE ATT&CK |
-|--------|-----------|---------------|
-| BloodHound Enumeration | AD graph-based attack path discovery | T1069, T1087 |
-| Kerberoasting | Service ticket extraction & offline cracking | T1558.003 (Kerberos Service Ticket Request) |
-| AS-REP Roasting | Exploit accounts without pre-auth | T1558.004 |
-| Pass-the-Hash | Reuse NTLM hashes for lateral movement | T1550.002 |
+|--------|-----------|:------------:|
+| SMB Enumeration | Network service & share discovery | T1046 |
+| LDAP Enumeration | Active Directory object discovery | T1087.002 |
+| RID Brute Force | Sequential account enumeration via SAMR | T1110 |
+| BloodHound Recon | Graph-based AD attack path analysis | T1069, T1087 |
+| Kerberoasting | SPN-based service ticket extraction | T1558.003 |
+| AS-REP Roasting | Accounts without pre-authentication | T1558.004 |
+| Pass-the-Hash | NTLM hash reuse for lateral movement | T1550.002 |
 
 ---
 
 ## 🔎 Detection Reference
 
-| Event ID | Description | Security Relevance | Data Source |
-|----------|-------------|-------------------|-------------|
-| 4768 | Kerberos Authentication (TGT Request) | Baseline authentication activity / potential AS-REP Roasting indicators | Security Logs |
-| 4769 | Kerberos Service Ticket (TGS Request) | Kerberoasting detection (service ticket requests for SPNs) | Security Logs |
-| 4771 | Kerberos Pre-Authentication Failure | Brute force attacks / password spraying attempts | Security Logs |
-| 4625 | Failed Logon Attempt | Credential attacks, brute force, and invalid authentication attempts | Security Logs |
-| 4672 | Special Privileges Assigned to New Logon | Privilege escalation / administrative logons | Security Logs |
-| 4728 | Member Added to Security-Enabled Global Group | Persistence / privilege escalation via group membership changes | Security Logs |
+| Event ID | Description | Attack Relevance |
+|----------|-------------|-----------------|
+| 4625 | Failed logon attempt | Brute force, RID cycling, password spray |
+| 4768 | Kerberos TGT request | Authentication baseline, AS-REP Roasting |
+| 4769 | Kerberos service ticket request | Kerberoasting detection |
+| 4771 | Kerberos pre-auth failure | Password spray, brute force |
+| 4672 | Special privileges assigned | Privilege escalation, admin logons |
+| 4728 | Member added to security group | Persistence, group membership abuse |
+| 4662 | AD object access | BloodHound-style ACL enumeration |
+| 1644 | LDAP query (Directory Services) | Bulk LDAP enumeration detection |
+| 5140 | Network share accessed | SMB enumeration, lateral movement prep |
 
 ---
 
-## 📸 Evidence & Screenshots
+## 🧠 Key Learnings
 
-Each phase includes evidence of configuration, attack execution, and detection results.
-
----
-
-## 🧠 Lessons Learned
-
-This section will document:
-
-- Key misconfigurations discovered
-- Attack techniques understood
-- Detection gaps identified
-- Hardening improvements applied
-- Real-world enterprise implications
+- ACL misconfigurations are the most critical AD risk - a standard user
+  with `WriteDACL` on Domain Admins means full domain compromise
+- Tools are interchangeable; **behavior is what matters** in detection
+- BloodHound surfaces attack paths invisible to standard AD tools
+- LDAP + SMB enumeration is consistently the precursor to lateral movement
+- Detection requires correlation across multiple event sources - single-event
+  alerts generate noise without context
+- Most attack surface is visible in Windows event logs - the challenge is
+  correlation, not data availability
 
 ---
 
-## References
+## 📚 References
 
-- [Microsoft AD DS Documentation](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview)
-- [MITRE ATT&CK - Enterprise](https://attack.mitre.org/matrices/enterprise/)
-- [BloodHound Documentation](https://bloodhound.specterops.io/get-started/introduction)
-- [SpecterOps - Kerberoasting](https://specterops.io/blog/2019/02/20/kerberoasting-revisited/)
+- [Microsoft AD DS Documentation](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/)
+- [MITRE ATT&CK - Enterprise Matrix](https://attack.mitre.org/matrices/enterprise/)
+- [BloodHound CE Documentation](https://bloodhound.specterops.io/)
+- [SpecterOps - Kerberoasting Revisited](https://specterops.io/blog/2019/02/20/kerberoasting-revisited/)
