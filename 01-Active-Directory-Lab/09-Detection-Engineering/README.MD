@@ -1,236 +1,166 @@
-# 🩸 Phase 8 - BloodHound & Attack Path Analysis
+# 🛡️ Phase 9 - Detection Engineering
 
 ## 🎯 Objective
 
-Perform full Active Directory attack path analysis using BloodHound CE - installing
-and configuring the environment, collecting domain data via bloodhound-python,
-ingesting results, and identifying privilege escalation paths from a standard
-domain user to Domain Admin.
+Translate adversary behaviors observed in Active Directory attack simulation into detection engineering logic using MITRE ATT&CK mapping, behavioral analytics, and SOC-style detection design.
+
+This phase focuses on identifying **how attacks are detected**, not just how they are executed.
 
 ---
 
-## 🧱 Environment
+## 🧱 Environment Context
 
 | Role | Host | IP |
 |------|------|----|
 | Domain Controller | DC01.corp.local | 192.168.10.10 |
 | Workstation | WS01.corp.local | 192.168.10.20 |
 | Attacker | Kali Linux | 192.168.10.30 |
-| Compromised Account | jsmith | Departments/HR |
+| Domain | corp.local | - |
 
 ---
 
-## 🛠️ Tools
+## 🧠 MITRE ATT&CK Mapping
 
-| Tool | Purpose |
-|------|---------|
-| Docker | BloodHound CE container deployment |
-| BloodHound CE | Attack path visualization and privilege analysis |
-| bloodhound-python | Remote AD data collection from Kali |
-| NetExec | Credential validation and SMB enumeration |
+![MITRE ATT&CK Mapping](Screenshots/01-mitre-attack-mapping.png)
 
----
-
-## 🧭 Attack Flow
-
-```text
-BloodHound CE Setup (Docker)
-          ↓
-Kali Network Validation
-          ↓
-bloodhound-python Collection (remote, as jsmith)
-          ↓
-BloodHound Data Ingestion
-          ↓
-Attack Path Analysis
-          ↓
-Privilege Escalation Path Mapped
-```
+| Technique | ID | Description |
+|-----------|----|-------------|
+| Network Service Scanning | T1046 | Discovery of open ports and services |
+| Account Discovery | T1087 | Enumeration of domain users and groups |
+| LDAP Enumeration | T1087.002 | Active Directory querying via LDAP |
+| Brute Force / RID cycling | T1110 | Sequential identity enumeration |
 
 ---
 
-## 🔧 Phase 1 - BloodHound CE Setup
+## 🔍 SMB Enumeration Detection (DC01)
 
-BloodHound CE was deployed on Kali Linux using Docker.
+![SMB Enumeration](Screenshots/02-smb-enumeration-dc01.png)
 
-```bash
-# Pull and start BloodHound CE
-docker pull specterops/bloodhound
-```
+### Behavioral Indicators
 
-| CLI Install & Start | Docker Pull |
-|---------------------|-------------|
-| ![](Screenshots/01-bloodhound-cli-install-start.png) | ![](Screenshots/02-bloodhound-docker-pull.png) |
+- Multiple SMB connections to TCP/445
+- Share enumeration activity
+- Non-interactive access patterns from single host
 
-BloodHound CE confirmed ready and accessible via browser.
+### Detection Logic
 
-![BloodHound Ready](Screenshots/03-bloodhound-ready.png)
-
----
-
-## 🌐 Phase 2 - Kali Network Validation
-
-Connectivity from Kali to the domain was verified before collection.
-
-| Check | Result |
-|-------|--------|
-| Kali IP configuration | ✅ 192.168.10.30 |
-| DNS configured to DC01 | ✅ 192.168.10.10 |
-| Ping DC01 | ✅ Reachable |
-| Ping corp.local | ✅ DNS resolving |
-
-| IP Config | DNS Config |
-|-----------|------------|
-| ![](Screenshots/06-kali-ip-config-lab.png) | ![](Screenshots/07-kali-dns-config.png) |
-
-| Ping DC01 | Ping corp.local |
-|-----------|-----------------|
-| ![](Screenshots/08-kali-ping-dc.png) | ![](Screenshots/09-kali-ping-corp-domain.png) |
+IF:
+- SMB connection spike from single IP
+OR
+- Share enumeration without user interaction
+THEN:
+- Alert: "SMB Reconnaissance Activity Detected"
 
 ---
 
-## 📡 Phase 3 - bloodhound-python Collection
+## 📡 LDAP Active Directory Enumeration
 
-Domain data was collected remotely from Kali using `bloodhound-python`
-with `jsmith` credentials - no agent required on the target.
+![LDAP Enumeration](Screenshots/03-ldap-ad-enumeration.png)
 
-```bash
-bloodhound-python -u jsmith -p 'P@ssw0rd!' \
-  -d corp.local -ns 192.168.10.10 -c All
-```
+### Behavioral Indicators
 
-| Collection Running | JSON Output Files |
-|--------------------|-------------------|
-| ![](Screenshots/01-bloodhound-python-collection.png) | ![](Screenshots/02-bloodhound-json-files.png) |
+- High frequency LDAP queries
+- Enumeration of users, groups, and domain structure
+- Repeated bind requests from same source
 
-> **Note:** `bloodhound-python` runs entirely from Kali over LDAP/RPC -
-> no binary needs to be dropped on a domain-joined machine, making this
-> the stealthier collection method compared to SharpHound.
+### Detection Logic
 
----
-
-## 🩸 Phase 4 - BloodHound Ingestion & Analysis
-
-JSON files were imported into BloodHound CE and the domain graph was analyzed.
-
-### Login & Import
-
-| BloodHound Login | Data Import |
-|-----------------|-------------|
-| ![](Screenshots/04-bloodhound-login.png) | ![](Screenshots/04-bloodhound-import.png) |
-
-### Domain Dashboard
-
-![BloodHound Dashboard](Screenshots/05-bloodhound-dashboard.png)
-
-### Full Domain Graph
-
-![Domain Graph](Screenshots/10-bloodhound-domain-graph.png)
+IF:
+- LDAP query volume exceeds baseline threshold
+OR
+- Bulk directory enumeration detected
+THEN:
+- Alert: "Active Directory Enumeration Detected"
 
 ---
 
-## 🚨 Phase 5 - Attack Path Analysis
+## 🔐 RID Brute Force Detection
 
-### jsmith Node - Initial Review
+![RID Brute Force Detection](Screenshots/04-rid-bruteforce-detection.png)
 
-`jsmith` was selected in BloodHound to map outbound relationships
-and control permissions.
+### Behavioral Indicators
 
-![jsmith Node Selected](Screenshots/11-jsmith-node-selected.png)
+- Sequential RID enumeration patterns
+- Repeated authentication failures (Event ID 4625)
+- SAMR/LSAD abuse patterns
 
----
+### Detection Logic
 
-### Inbound Object Control
-
-BloodHound revealed that `jsmith` holds **inbound object control**
-over highly privileged groups:
-
-![jsmith Inbound Control](Screenshots/12-jsmith-inbound-control-focus.png)
-
-| Relationship | Source | Target | Risk |
-|-------------|--------|--------|------|
-| WriteDACL / GenericWrite | jsmith | Domain Admins | 🔴 Critical |
-| WriteDACL / GenericWrite | jsmith | Enterprise Admins | 🔴 Critical |
-| WriteDACL / GenericWrite | jsmith | Administrators | 🔴 Critical |
-
-> A standard HR user with object control over Domain Admins is a
-> **critical misconfiguration** - Priority 1 in any real AD assessment.
+IF:
+- Sequential RID access pattern detected
+OR
+- High authentication failure rate in short time window
+THEN:
+- Alert: "RID Brute Force / Account Enumeration Attempt"
 
 ---
 
-### Attack Path Relationships
+## 📊 Detection Matrix (SOC Correlation Model)
 
-![Attack Path Relationships](Screenshots/13-attack-path-relationships.png)
+![Detection Matrix](Screenshots/05-detection-matrix.png)
 
----
-
-### Final Escalation Path - jsmith → Domain Admin
-
-```text
-jsmith (Standard HR User)
-      ↓  WriteDACL on Domain Admins
-Modify group ACL → Add self to Domain Admins
-      ↓
-CORP\Domain Admins
-      ↓
-Full Domain Compromise
-```
-
-![Domain Admin Attack Path](Screenshots/14-domain-admin-attack-path-final.png)
+| Attack Technique | Behavior | Detection Signal | MITRE ID |
+|------------------|----------|------------------|----------|
+| SMB Enumeration | Port scanning / share probing | SMB connection spikes | T1046 |
+| LDAP Enumeration | AD queries / directory recon | LDAP query bursts | T1087.002 |
+| RID Brute Force | Sequential RID guessing | Auth failures + SAMR activity | T1110 |
+| Network Recon | Host/service discovery | Port scanning patterns | T1046 |
 
 ---
 
-## 🧠 Key Findings
+## 🧠 Detection Engineering Strategy
 
-| Finding | Severity | Description |
-|---------|----------|-------------|
-| jsmith WriteDACL on Domain Admins | 🔴 Critical | Standard user can escalate to DA |
-| jsmith WriteDACL on Enterprise Admins | 🔴 Critical | Full forest compromise possible |
-| Remote collection via bloodhound-python | ⚠️ Notable | No agent needed - LDAP/RPC sufficient |
-| Anonymous enumeration blocked | 🟢 Secure | Phase 6 hardening effective |
-| SMB signing enforced | 🟢 Secure | Relay attacks mitigated |
+### Core Principles
+
+1. Detect **behavior**, not tools
+2. Correlate weak signals into strong alerts
+3. Baseline normal AD traffic first
+4. Combine SMB + LDAP + authentication telemetry
 
 ---
 
-## 🛡️ Recommended Mitigations
+## 🚨 Key Detection Insights
+
+- SMB enumeration is an early-stage reconnaissance technique
+- LDAP enumeration is strongly correlated with BloodHound-style recon
+- RID brute force indicates account discovery attempts
+- Individual events are low fidelity → correlation is required
+
+---
+
+## 🛡️ Defensive Recommendations
 
 | Finding | Mitigation |
-|---------|------------|
-| WriteDACL on privileged groups | Audit and remove non-admin ACL entries on tier-0 groups |
-| Excessive object control | Implement AD tiering model (Tier 0 / 1 / 2) |
-| ACL misconfigurations | Run BloodHound regularly as part of AD hygiene |
-| Remote LDAP collection possible | Restrict LDAP queries; monitor for bulk enumeration (Event ID 1644) |
+|--------|------------|
+| SMB enumeration | Restrict SMB exposure + monitor port 445 spikes |
+| LDAP enumeration | Enable LDAP signing + monitor query anomalies |
+| RID brute force | Implement lockout policies + rate limiting |
+| AD reconnaissance | Centralized logging + SIEM correlation rules |
 
 ---
 
 ## 🧠 Key Learnings
 
-- `bloodhound-python` collects the same data as SharpHound entirely over
-  the network - no binary on the target, harder to detect
-- BloodHound surfaces ACL misconfigurations that are invisible through
-  standard AD tools - manual ACL review across thousands of objects is
-  not realistic
-- A `WriteDACL` edge on `Domain Admins` from a standard user means full
-  domain compromise without ever touching a privileged account directly
-- BloodHound CE via Docker is the fastest way to get the full community
-  edition running in a lab - no manual dependency management
-- Effective AD defense requires both technical controls and regular
-  BloodHound-style ACL audits
+- Detection engineering focuses on **attack behavior patterns**
+- MITRE ATT&CK provides structure but not detection logic
+- SMB, LDAP, and RID enumeration are often chained together in real attacks
+- Correlation across logs is more powerful than single-event alerts
+- BloodHound-style recon can be detected through query volume patterns
 
 ---
 
-## ✅ Outcome
+## 🎯 Outcome
 
-| Phase | Result |
-|-------|--------|
-| BloodHound CE setup | ✅ Deployed via Docker |
-| Kali network validation | ✅ Full connectivity to corp.local |
-| bloodhound-python collection | ✅ All domain data collected remotely |
-| BloodHound ingestion | ✅ Domain graph generated |
-| Attack path analysis | 🔴 Critical path found - jsmith → Domain Admin |
+| Area | Result |
+|------|--------|
+| MITRE mapping | ✅ Completed |
+| SMB detection logic | ✅ Implemented |
+| LDAP detection logic | ✅ Implemented |
+| RID brute detection | ✅ Implemented |
+| SOC correlation matrix | ✅ Completed |
 
-`jsmith`, a standard HR user, holds a direct privilege escalation path
-to Domain Admin through ACL misconfigurations - a realistic critical finding
-that would be Priority 1 in any real AD security assessment.
+---
 
-👉 **Next:** [Phase 10 - In progress ](../#/)
+## 🚀 Next Phase
+
+👉 Phase 10 - Detection Rules (Sigma / SIEM implementation)
