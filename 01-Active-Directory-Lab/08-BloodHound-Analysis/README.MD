@@ -233,4 +233,4 @@ Full Domain Compromise
 to Domain Admin through ACL misconfigurations - a realistic critical finding
 that would be Priority 1 in any real AD security assessment.
 
-👉 **Next:** [Phase 9 - Kerberoasting](../09-Kerberoasting/)
+👉 **Next:** [Phase 9 - Detection Engineering](../09-Detection-Engineering/)
