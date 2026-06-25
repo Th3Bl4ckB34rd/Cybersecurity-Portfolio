@@ -45,7 +45,7 @@ My primary interests include:
 
 | # | Project | Description | Technologies | Status |
 |---|---------|-------------|--------------|:------:|
-| 01 | 🏢 [Active Directory Lab](./01-Active-Directory-Lab/) | Enterprise Windows domain with security hardening, GPO management, Kerberos attacks, and privilege escalation. | Windows Server, AD DS, DNS, BloodHound | 🚧 In Progress |
+| 01 | 🏢 [Active Directory Lab](./01-Active-Directory-Lab/) | Enterprise Windows domain with security hardening, GPO management, Kerberos attacks, and privilege escalation. | Windows Server, AD DS, DNS, BloodHound | ✅ Complete |
 | 02 | 🛡️ Home SOC | Home Security Operations Center for collecting, monitoring, and analyzing security events. | Wazuh, Sysmon, Elastic Stack | ⏳ Planned |
 | 03 | 🎯 Threat Hunting | Hunt adversary behaviors using Windows logs, Sysmon telemetry, and MITRE ATT&CK. | Sysmon, Event Viewer, MITRE ATT&CK | ⏳ Planned |
 | 04 | 🔍 Detection Engineering | Custom detection rules and SIEM analytics using Sigma and behavioral indicators. | Sigma, Elastic, SIEM | ⏳ Planned |
