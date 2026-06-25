@@ -2,9 +2,10 @@
 
 ## 🎯 Objective
 
-Perform full Active Directory attack path analysis using BloodHound CE - ingesting
-domain data via SharpHound, mapping privilege relationships, and identifying realistic
-escalation paths from a standard domain user to Domain Admin.
+Perform full Active Directory attack path analysis using BloodHound CE - installing
+and configuring the environment, collecting domain data via bloodhound-python,
+ingesting results, and identifying privilege escalation paths from a standard
+domain user to Domain Admin.
 
 ---
 
@@ -23,106 +24,128 @@ escalation paths from a standard domain user to Domain Admin.
 
 | Tool | Purpose |
 |------|---------|
-| Nmap | Port scanning and service fingerprinting |
-| smbclient | SMB share access and file enumeration |
-| rpcclient | RPC-based user and group enumeration |
-| NetExec | SMB/LDAP authentication and domain enumeration |
-| SharpHound | AD data collection for BloodHound ingestion |
+| Docker | BloodHound CE container deployment |
 | BloodHound CE | Attack path visualization and privilege analysis |
+| bloodhound-python | Remote AD data collection from Kali |
+| NetExec | Credential validation and SMB enumeration |
 
 ---
 
 ## 🧭 Attack Flow
 
 ```text
-Reconnaisance & Service Enumeration
-            ↓
-Credential Validation (jsmith)
-            ↓
-SharpHound Data Collection (from WS01)
-            ↓
-BloodHound Ingestion & Graph Analysis
-            ↓
-Attack Path Identification
-            ↓
+BloodHound CE Setup (Docker)
+          ↓
+Kali Network Validation
+          ↓
+bloodhound-python Collection (remote, as jsmith)
+          ↓
+BloodHound Data Ingestion
+          ↓
+Attack Path Analysis
+          ↓
 Privilege Escalation Path Mapped
 ```
 
 ---
 
-## 🔍 Phase 1 - Reconnaissance & Enumeration
+## 🔧 Phase 1 - BloodHound CE Setup
 
-Services enumerated on DC01 to map the attack surface:
-
-| Service | Port | Finding |
-|---------|------|---------|
-| DNS | 53 | corp.local zone, SRV records exposed |
-| SMB | 445 | Signing required, shares visible authenticated |
-| LDAP | 389 | Base DN: `DC=corp,DC=local` |
-| RPC | 135 | Endpoint mapper responding |
-| Kerberos | 88 | Active - confirms DC role |
-
-Anonymous enumeration was blocked (confirmed in Phase 7). All further
-enumeration required valid credentials.
-
----
-
-## 🔐 Phase 2 - Credential Validation
-
-Valid domain credentials were confirmed via SMB authentication:
+BloodHound CE was deployed on Kali Linux using Docker.
 
 ```bash
-netexec smb 192.168.10.10 -u jsmith -p 'P@ssw0rd!' --shares
+# Pull and start BloodHound CE
+docker pull specterops/bloodhound
 ```
 
-| Account | Privilege Level | Auth Result |
-|---------|----------------|-------------|
-| jsmith | Standard domain user | ✅ Authenticated |
+| CLI Install & Start | Docker Pull |
+|---------------------|-------------|
+| ![](Screenshots/01-bloodhound-cli-install-start.png) | ![](Screenshots/02-bloodhound-docker-pull.png) |
 
-> **Simulated scenario:** `jsmith` represents a credential obtained through
-> phishing or password spraying - a standard domain user with no apparent
-> elevated privileges at first glance.
+BloodHound CE confirmed ready and accessible via browser.
 
-![Authenticated Access](Screenshots/01-authenticated-smb-access.png)
+![BloodHound Ready](Screenshots/03-bloodhound-ready.png)
 
 ---
 
-## 📡 Phase 3 - SharpHound Data Collection
+## 🌐 Phase 2 - Kali Network Validation
 
-SharpHound was executed on WS01 (as `jsmith`) to collect AD relationship
-data for BloodHound ingestion.
+Connectivity from Kali to the domain was verified before collection.
 
-```powershell
-.\SharpHound.exe -c All --outputdirectory C:\Temp\
+| Check | Result |
+|-------|--------|
+| Kali IP configuration | ✅ 192.168.10.30 |
+| DNS configured to DC01 | ✅ 192.168.10.10 |
+| Ping DC01 | ✅ Reachable |
+| Ping corp.local | ✅ DNS resolving |
+
+| IP Config | DNS Config |
+|-----------|------------|
+| ![](Screenshots/06-kali-ip-config-lab.png) | ![](Screenshots/07-kali-dns-config.png) |
+
+| Ping DC01 | Ping corp.local |
+|-----------|-----------------|
+| ![](Screenshots/08-kali-ping-dc.png) | ![](Screenshots/09-kali-ping-corp-domain.png) |
+
+---
+
+## 📡 Phase 3 - bloodhound-python Collection
+
+Domain data was collected remotely from Kali using `bloodhound-python`
+with `jsmith` credentials - no agent required on the target.
+
+```bash
+bloodhound-python -u jsmith -p 'P@ssw0rd!' \
+  -d corp.local -ns 192.168.10.10 -c All
 ```
 
-| Collection Method | Data Gathered |
-|-------------------|---------------|
-| ACL | Object permissions and control relationships |
-| Group | Group memberships across the domain |
-| LocalAdmin | Local administrator relationships on machines |
-| Session | Active user sessions on hosts |
-| Trusts | Domain trust relationships |
+| Collection Running | JSON Output Files |
+|--------------------|-------------------|
+| ![](Screenshots/01-bloodhound-python-collection.png) | ![](Screenshots/02-bloodhound-json-files.png) |
 
-![SharpHound Collection](Screenshots/02-sharphound-collection.png)
+> **Note:** `bloodhound-python` runs entirely from Kali over LDAP/RPC -
+> no binary needs to be dropped on a domain-joined machine, making this
+> the stealthier collection method compared to SharpHound.
 
 ---
 
-## 🩸 Phase 4 - BloodHound Analysis
+## 🩸 Phase 4 - BloodHound Ingestion & Analysis
 
-SharpHound output was ingested into BloodHound CE and the domain graph
-was analyzed for privilege escalation paths.
+JSON files were imported into BloodHound CE and the domain graph was analyzed.
 
-### Domain Overview
+### Login & Import
 
-![BloodHound Domain Graph](Screenshots/03-bloodhound-domain-graph.png)
+| BloodHound Login | Data Import |
+|-----------------|-------------|
+| ![](Screenshots/04-bloodhound-login.png) | ![](Screenshots/04-bloodhound-import.png) |
+
+### Domain Dashboard
+
+![BloodHound Dashboard](Screenshots/05-bloodhound-dashboard.png)
+
+### Full Domain Graph
+
+![Domain Graph](Screenshots/10-bloodhound-domain-graph.png)
 
 ---
 
-### 🚨 Key Finding - jsmith Object Control
+## 🚨 Phase 5 - Attack Path Analysis
 
-BloodHound revealed that `jsmith` holds **inbound object control** over
-highly privileged groups:
+### jsmith Node - Initial Review
+
+`jsmith` was selected in BloodHound to map outbound relationships
+and control permissions.
+
+![jsmith Node Selected](Screenshots/11-jsmith-node-selected.png)
+
+---
+
+### Inbound Object Control
+
+BloodHound revealed that `jsmith` holds **inbound object control**
+over highly privileged groups:
+
+![jsmith Inbound Control](Screenshots/12-jsmith-inbound-control-focus.png)
 
 | Relationship | Source | Target | Risk |
 |-------------|--------|--------|------|
@@ -130,43 +153,30 @@ highly privileged groups:
 | WriteDACL / GenericWrite | jsmith | Enterprise Admins | 🔴 Critical |
 | WriteDACL / GenericWrite | jsmith | Administrators | 🔴 Critical |
 
-> A standard HR user with object control over Domain Admins represents a
-> **critical misconfiguration** - this is the exact type of finding a real
-> AD security assessment would flag as Priority 1.
-
-![BloodHound jsmith Privileges](Screenshots/04-bloodhound-jsmith-object-control.png)
+> A standard HR user with object control over Domain Admins is a
+> **critical misconfiguration** - Priority 1 in any real AD assessment.
 
 ---
 
-## 💣 Phase 5 - Attack Path
+### Attack Path Relationships
 
-BloodHound mapped a direct privilege escalation path from `jsmith` to
-Domain Admin:
+![Attack Path Relationships](Screenshots/13-attack-path-relationships.png)
+
+---
+
+### Final Escalation Path - jsmith → Domain Admin
 
 ```text
-jsmith (Standard User)
-      ↓  [WriteDACL on Domain Admins]
+jsmith (Standard HR User)
+      ↓  WriteDACL on Domain Admins
 Modify group ACL → Add self to Domain Admins
       ↓
 CORP\Domain Admins
       ↓
-Full domain compromise
+Full Domain Compromise
 ```
 
-**Exploitation steps (simulated):**
-
-```powershell
-# Step 1 - Add jsmith to Domain Admins via WriteDACL abuse
-Add-DomainObjectAcl -TargetIdentity "Domain Admins" -PrincipalIdentity jsmith -Rights All
-
-# Step 2 - Add self to group
-Add-DomainGroupMember -Identity "Domain Admins" -Members jsmith
-
-# Step 3 - Verify
-Get-DomainGroupMember -Identity "Domain Admins"
-```
-
-![Attack Path Graph](Screenshots/05-bloodhound-attack-path.png)
+![Domain Admin Attack Path](Screenshots/14-domain-admin-attack-path-final.png)
 
 ---
 
@@ -176,9 +186,9 @@ Get-DomainGroupMember -Identity "Domain Admins"
 |---------|----------|-------------|
 | jsmith WriteDACL on Domain Admins | 🔴 Critical | Standard user can escalate to DA |
 | jsmith WriteDACL on Enterprise Admins | 🔴 Critical | Full forest compromise possible |
+| Remote collection via bloodhound-python | ⚠️ Notable | No agent needed - LDAP/RPC sufficient |
 | Anonymous enumeration blocked | 🟢 Secure | Phase 6 hardening effective |
 | SMB signing enforced | 🟢 Secure | Relay attacks mitigated |
-| Excessive object control permissions | 🔴 Critical | ACL misconfiguration in AD |
 
 ---
 
@@ -187,27 +197,25 @@ Get-DomainGroupMember -Identity "Domain Admins"
 | Finding | Mitigation |
 |---------|------------|
 | WriteDACL on privileged groups | Audit and remove non-admin ACL entries on tier-0 groups |
-| Excessive user privileges | Implement AD tiering model (Tier 0 / 1 / 2) |
-| Object control misconfigurations | Run BloodHound regularly as part of AD hygiene |
-| Credential exposure risk | Enforce MFA, monitor for spray patterns (Event ID 4625) |
+| Excessive object control | Implement AD tiering model (Tier 0 / 1 / 2) |
+| ACL misconfigurations | Run BloodHound regularly as part of AD hygiene |
+| Remote LDAP collection possible | Restrict LDAP queries; monitor for bulk enumeration (Event ID 1644) |
 
 ---
 
 ## 🧠 Key Learnings
 
-- BloodHound reveals privilege relationships that are invisible through
-  standard AD tools - ACL misconfigurations are notoriously hard to
-  spot manually across thousands of objects
-- A standard domain user with `WriteDACL` on `Domain Admins` represents
-  full domain compromise - privilege doesn't require a high-level account
-  if ACLs are misconfigured
-- SharpHound's ACL collection is the most impactful data source for
-  finding escalation paths - always run with `-c All`
-- The most dangerous AD misconfigurations are rarely obvious;
-  BloodHound's `Shortest Path to Domain Admin` query is the fastest
-  way to surface them
-- Effective AD security requires both technical controls (SMB signing,
-  lockout policies) and structural hygiene (ACL audits, tiering model)
+- `bloodhound-python` collects the same data as SharpHound entirely over
+  the network - no binary on the target, harder to detect
+- BloodHound surfaces ACL misconfigurations that are invisible through
+  standard AD tools - manual ACL review across thousands of objects is
+  not realistic
+- A `WriteDACL` edge on `Domain Admins` from a standard user means full
+  domain compromise without ever touching a privileged account directly
+- BloodHound CE via Docker is the fastest way to get the full community
+  edition running in a lab - no manual dependency management
+- Effective AD defense requires both technical controls and regular
+  BloodHound-style ACL audits
 
 ---
 
@@ -215,15 +223,14 @@ Get-DomainGroupMember -Identity "Domain Admins"
 
 | Phase | Result |
 |-------|--------|
-| Reconnaissance & enumeration | ✅ Full service map obtained |
-| Credential validation | ✅ jsmith authenticated successfully |
-| SharpHound collection | ✅ Full domain data ingested |
-| BloodHound analysis | ✅ Attack paths identified |
-| Privilege escalation path | 🔴 Critical path found - jsmith → Domain Admin |
+| BloodHound CE setup | ✅ Deployed via Docker |
+| Kali network validation | ✅ Full connectivity to corp.local |
+| bloodhound-python collection | ✅ All domain data collected remotely |
+| BloodHound ingestion | ✅ Domain graph generated |
+| Attack path analysis | 🔴 Critical path found - jsmith → Domain Admin |
 
-BloodHound confirmed that `jsmith`, a standard HR user, holds a direct
-privilege escalation path to Domain Admin through ACL misconfigurations -
-a realistic and critical finding that would be Priority 1 in a real
-AD security assessment.
+`jsmith`, a standard HR user, holds a direct privilege escalation path
+to Domain Admin through ACL misconfigurations - a realistic critical finding
+that would be Priority 1 in any real AD security assessment.
 
-👉 **Next:** [Phase 9 - Detection Engineering](../09-Detection-Engineering/)
+👉 **Next:** [Phase 9 - Kerberoasting](../09-Kerberoasting/)
